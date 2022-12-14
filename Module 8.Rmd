@@ -5,6 +5,16 @@ date: "`r Sys.Date()`"
 output: html_document
 ---
 
+### Introductioon
+Trans-Gulf migrants (TGMs) are species that migrate from Central and South America and land between Texas and Florida looking for areas to forage and breed. The specific time in which they land is imperative to their longevity, as arriving early could increase chances of finding a mate and increase time for mating, while arriving later would secure food availability.
+Population displacement is becoming a serious concern as migration patterns are being disrupted by the increasing severity of climate change, requiring the TGMs to alter the timing of their migration in order to access the same resources as they normally would. TGMs also rely on the environmental cues by stop over points throughout their trip to ensure that the migration will go smoothly, and the longer the migration trip, the less impact a shorter length shift in their departure date will have according to @carey2009the. 
+To measure the effects of local weather conditions on TGM arrival time in Massachusetts, a program called eBird will be used for bird ecology data in tandem with meteorological data.
+
+### Methods
+After choosing what species of TGMs to study, occurence data from an rgbif function will be used to grab data for each species. NOAA's NCDC API will be used to locate weather stations specific locations throughout the birds trip to Boston. Then, a function called meteo_pull_monitors() will be used to grab weather data from these stations.
+Finding the day where 25% of all the individuals of a species has arrived constitutes the "arrival time", and the rest of the species that arrive will follow a logistic curve, modeled with a logistic model in R. After finding the weather data for these dates along the migration path of the species, a rolling mean function will help find the mean of the weather data over 2 weeks before each Julian day. A linear mixed-effect model will allow for analysis of many factors that may affect the relationship between arrival time and local weather. An ANOVA is run over the models to find a best fit model of the data. 
+
+### Results
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -350,6 +360,7 @@ head(sv.arr.weath2)
 sm.lmer <- lmer(j.day~tmin*tmax*wvec+(1|name),sm.arr.weath,na.action = "na.fail")
 Anova(sm.lmer) 
 
+<<<<<<< HEAD
 #0Mean two week weather preceding arrival
 sm.lmer2 <- lmer(j.day~wk.tmin*wk.tmax*wk.wvec+(1|name),sm.arr.weath2,na.action = "na.fail")
 Anova(sm.lmer2) 
@@ -447,3 +458,9 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sv.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+=======
+````
+### Discussion
+
+### Author Contribution
+>>>>>>> 5769d7e892c690d394515be968a8acb2215b2278
