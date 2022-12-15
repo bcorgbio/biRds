@@ -131,7 +131,7 @@ sm.arrive.date%>%
 
 ```
 
-```{r, "EBird Data Modeling For Cape May Warbler (st)",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "EBird Data Modeling For Cape May Warbler (st)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 st<- dat%>%
   filter(species == "Setophaga tigrina")%>%
   group_by(year)%>%
@@ -167,7 +167,7 @@ st.arrive.date%>%
 
 ```
 
-```{r, "EBird Data Modeling For Yellow-Rumped Warbler (sc)",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "EBird Data Modeling For Yellow-Rumped Warbler (sc)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sc<- dat%>%
   filter(species == "Setophaga coronata")%>%
   group_by(year)%>%
@@ -203,7 +203,7 @@ sc.arrive.date%>%
 
 ```
 
-```{r, "EBird Data Modeling For Palm Warbler (sp)",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "EBird Data Modeling For Palm Warbler (sp)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sp<- dat%>%
   filter(species == "Setophaga palmarum")%>%
   group_by(year)%>%
@@ -239,7 +239,7 @@ sp.arrive.date%>%
 
 ```
 
-```{r, "EBird Data Modeling For Black-Throated Green Warbler (sv)",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "EBird Data Modeling For Black-Throated Green Warbler (sv)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sv<- dat%>%
   filter(species == "Setophaga virens")%>%
   group_by(year)%>%
@@ -311,7 +311,7 @@ sm.arr.weath2 <- sm.arrive.date%>%
 head(sm.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Cape May Warbler", echo=FALSE, message=FALSE}
+```{r, "eBird and weather data joinnig for Cape May Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 st.arr.weath <- st.arrive.date%>%
   left_join(weather.d)%>%
   left_join(st%>%dplyr::select(year,date,j.day))
