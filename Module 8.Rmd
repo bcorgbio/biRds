@@ -1,7 +1,7 @@
 ---
-title: "Moduke 8"
+title: "Module8"
 author: "biRds"
-date: "`r Sys.Date()`"
+date: "14/12/22"
 output: html_document
 ---
 
@@ -458,9 +458,10 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sv.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
-=======
-````
+
 ### Discussion
 
 ### Author Contribution
->>>>>>> 5769d7e892c690d394515be968a8acb2215b2278
+Sabrina G. wrote the introduction and method sections.
+Clémentine P. did the R-coding for this project, and the editing of the project.
+Stefanie F.
