@@ -344,7 +344,7 @@ sp.arr.weath2 <- sp.arrive.date%>%
 head(sp.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Black-Throated Green Warbler",einclude=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Black-Throated Green Warbler",include=FALSE,warning=FALSE,message=FALSE}
 sv.arr.weath <- sv.arrive.date%>%
   left_join(weather.d)%>%
   left_join(sv%>%dplyr::select(year,date,j.day))
