@@ -145,7 +145,6 @@ plot_usmap(
 
 #getting  weather info and print table 
 weather.d <- meteo_pull_monitors(sta.d$id,date_min = "2000-01-01")
-head(weather.d)
 ```
 
 First, a data set was created by collecting data for each of our species between 2000 and 2020 to allow to analyze eBird data. Then, another data set was created using NOAA's NCDC API, collecting weather data in the between the years 2000 and 2020, in three different regions of the USA. The weather sampling locations are shown above, and were chosen to reflect the path of TGMs.
