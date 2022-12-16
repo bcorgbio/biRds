@@ -22,18 +22,18 @@ library(dplyr)
 library(kableExtra)
 ```
 
-### Introduction
+## Introduction
 Trans-Gulf migrants (TGMs) are species that migrate from Central and South America and land between Texas and Florida looking for areas to forage and breed. The specific time in which they land is imperative to their longevity, as arriving early could increase chances of finding a mate and increase time for mating, while arriving later would secure food availability.
 Population displacement is becoming a serious concern as migration patterns are being disrupted by the increasing severity of climate change, requiring the TGMs to alter the timing of their migration in order to access the same resources as they normally would. TGMs also rely on the environmental cues by stop over points throughout their trip to ensure that the migration will go smoothly, and the longer the migration trip, the less impact a shorter length shift in their departure date will have according to @carey2009the. 
 To measure the effects of local weather conditions on TGM arrival time in Massachusetts, a program called eBird will be used for bird ecology data in tandem with meteorological data.
 
-### Methods
+## Methods
 After choosing what species of TGMs to study, occurence data from an rgbif function will be used to grab data for each species. NOAA's NCDC API will be used to locate weather stations specific locations throughout the birds trip to Boston. Then, a function called meteo_pull_monitors() will be used to grab weather data from these stations.
 Finding the day where 25% of all the individuals of a species has arrived constitutes the "arrival time", and the rest of the species that arrive will follow a logistic curve, modeled with a logistic model in R. After finding the weather data for these dates along the migration path of the species, a rolling mean function will help find the mean of the weather data over 2 weeks before each Julian day. A linear mixed-effect model will allow for analysis of many factors that may affect the relationship between arrival time and local weather. An ANOVA is run over the models to find a best fit model of the data. 
 
-### Results
+## Results
 
-```{r, "Ebird Set up" , include=FALSE, cache=TRUE, results=TRUE}
+```{r, "Ebird Set up",include=FALSE,cache=TRUE,results=TRUE}
 species <- c("Setophaga magnolia","Setophaga tigrina","Setophaga coronata","Setophaga palmarum","Setophaga virens")
 
 y <- paste0("1999",",","2019")
@@ -275,7 +275,7 @@ sv.arrive.date%>%
 
 ```
 
-```{r, "Weather Data Prep",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "Weather Data Prep",include=FALSE,warning=FALSE,message=FALSE}
 #single day data
 weather.d <- weather.d%>%
   mutate(year=as.integer(str_sub(date,1,4)),
@@ -300,7 +300,7 @@ weather.wk <-weather.d %>%
   dplyr::select(j.day,date2,name,wk.tmin,wk.tmax,wk.wvec)
 ```
 
-```{r, "eBird and weather data joinnig for Magnolia Warbler",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Magnolia Warbler",include=FALSE,warning=FALSE,message=FALSE}
 sm.arr.weath <- sm.arrive.date%>%
   left_join(weather.d)%>%
   left_join(sm%>%dplyr::select(year,date,j.day))
@@ -311,7 +311,7 @@ sm.arr.weath2 <- sm.arrive.date%>%
 head(sm.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Cape May Warbler",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Cape May Warbler",include=FALSE,warning=FALSE,message=FALSE}
 st.arr.weath <- st.arrive.date%>%
   left_join(weather.d)%>%
   left_join(st%>%dplyr::select(year,date,j.day))
@@ -322,7 +322,7 @@ st.arr.weath2 <- st.arrive.date%>%
 head(st.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Yellow-Rumped Warbler",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Yellow-Rumped Warbler",include=FALSE,warning=FALSE,message=FALSE}
 sc.arr.weath <- sc.arrive.date%>%
   left_join(weather.d)%>%
   left_join(sc%>%dplyr::select(year,date,j.day))
@@ -333,7 +333,7 @@ sc.arr.weath2 <- sc.arrive.date%>%
 head(sc.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Palm Warbler",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Palm Warbler",include=FALSE,warning=FALSE,message=FALSE}
 sp.arr.weath <- sp.arrive.date%>%
   left_join(weather.d)%>%
   left_join(sp%>%dplyr::select(year,date,j.day))
@@ -344,7 +344,7 @@ sp.arr.weath2 <- sp.arrive.date%>%
 head(sp.arr.weath2)
 ```
 
-```{r, "eBird and weather data joinnig for Black-Throated Green Warbler",echo=FALSE,warning=FALSE,message=FALSE}
+```{r, "eBird and weather data joinnig for Black-Throated Green Warbler",einclude=FALSE,warning=FALSE,message=FALSE}
 sv.arr.weath <- sv.arrive.date%>%
   left_join(weather.d)%>%
   left_join(sv%>%dplyr::select(year,date,j.day))
@@ -354,7 +354,7 @@ sv.arr.weath2 <- sv.arrive.date%>%
   left_join(weather.wk)
 head(sv.arr.weath2)
 ```
-
+After analyzing both the eBird and weather data, linear mixed-effect modelling was conducted for the five species of birds.
 ```{r, "Linear Mixed-Effect Modelling for Magnolia Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
 #weather at 0, 5, and 10 days away from arrival
@@ -459,9 +459,19 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sv.arr.weath2,na.actio
 Anova(best.lmer)
 ```
 
-### Discussion
+## Discussion
+  Weather can influence the arrival time for TGMs migrating to MA. In 2004, weather conditions were slightly above average for most of the year, including the Julian days between 120 and 150. That year is also said to be the fourth warmest year on record (US Department of Commerce). Our TGM data for three of our five species show a slightly different graphical display for those dates. Between the years 2000 and 2020, about 100% of our Magnolia Warblers, Cape May Warbler, and Black-Throated Green Warbler birds arrived in Massachusetts by Julian day 140. However, for all three species the 2004 data is an outlier. There appeared to be a delay for the three species in arriving in Massachusetts. There is a possibility that the 2004 higher than normal weather conditions globally confused these birds, delaying their migration patterns as weather does influence a bird’s arrival time.
+  For the most part, minus the 2004 data, arrival time did not vary according to the temperature and wind variables along the migration route for the TGMs migrating to MA inspected. Over a span of 20 years, 5 TGMs: Setophaga magnolia, Setophaga tigrina, Setophaga coronata, Setophaga palmarum, Setophaga virens did not appear to have any significant changes within their migration patterns. Their arrival dates for 25% of their population varied only between a few days from year to year and their numbers always appeared to plateau around the same Julian day each year for the 20 recorded years. 
 
-### Author Contribution
-*Sabrina G. wrote the introduction and method sections.
-*Clémentine P. did the R-coding for this project, and the editing of the project.
-*Stefanie F.
+  Though climate change may play a role in the population status of TGMs arriving in MA during the spring, the data collected does not directly reflect climate change’s impact on arrival. All of our bird species data collected has their specific Julian day each year that is closest to 0.25 of the population arriving within a maximum of 8 days difference between the years 2000 and 2020. The year by Julian day plots for each bird species inspected do not show a clear pattern of the 25% arrival date being later in the year over time either. Instead, each TGM: Setophaga magnolia, Setophaga tigrina, Setophaga coronata, Setophaga palmarum, Setophaga virens plots look like a typical scatter plot with no visible potential line of regression.
+  However, as previously mentioned, if years with weather similar to 2004 occur again, bird migration to the North may be delayed overall. While our data did not display a pattern of TGM migration being delayed the closer the year was to 2020, if temperatures are to rapidly increase due to global warming, bird migration to the North will slowly happen as less birds will arrive on their expected arrival dates as predicted by previous years.
+
+  In conclusion, our results do not convey a clear correlation between bird migration patterns and climate change. Instead, they support the idea that migration arrival dates vary slightly from the mean arrival date. A similar study mentioned how variation from the mean arrival date can be a source of more basic ecological changes that are not particular to climate change (@miller2008bird). Our specific findings pertaining to 2004 reflect that an increase in temperature directly affects bird migration. However, the data collected does not reflect an overall high enough North American temperature increase to display data which shows a pattern of bird migration arrival dates changing as according to climate change. Perhaps climate change is not at the detrimental point yet where global temperature increase directly modifies arrival times. Or perhaps, the data collected is not specific enough to showcase bird responses to climate change. A similar study looking at migratory birds and climate change suggests that perhaps, certain age groups or genders may respond differently to climate change (@knudsen2011challenging). It is possible that adults, having previously migrated to Massachusetts might arrive in Massachusetts on similar dates each year due to prior knowledge and experience. Younger birds with no prior migratory experience might have a slightly different variation to their arrival dates than their seniors which might reflect climate change’s influence on bird migration.
+  While our results may not convey a clear correlation between bird migration patterns and climate change, they do indicate that high temperatures can delay bird migration. If global warming continues to drive climate change, our results suggest that bird migration to Massachusetts can be delayed as a whole.
+
+## Author Contribution
+* Sabrina G. wrote the introduction and method sections.
+* Clémentine P. did the R-coding for this project, and the editing of the project.
+* Stefanie F. worked on the discussion section of this project.
+
+## References
