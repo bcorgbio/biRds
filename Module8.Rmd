@@ -17,6 +17,7 @@ library(ggmap)
 library(usmap)
 library(lme4)
 library(car)
+library(cowplot)
 library(knitr)
 library(dplyr)
 library(kableExtra)
@@ -26,6 +27,58 @@ library(kableExtra)
 Trans-Gulf migrants (TGMs) are species that migrate from Central and South America and land between Texas and Florida looking for areas to forage and breed. The specific time in which they land is imperative to their longevity, as arriving early could increase chances of finding a mate and increase time for mating, while arriving later would secure food availability.
 Population displacement is becoming a serious concern as migration patterns are being disrupted by the increasing severity of climate change, requiring the TGMs to alter the timing of their migration in order to access the same resources as they normally would. TGMs also rely on the environmental cues by stop over points throughout their trip to ensure that the migration will go smoothly, and the longer the migration trip, the less impact a shorter length shift in their departure date will have according to @carey2009the. 
 To measure the effects of local weather conditions on TGM arrival time in Massachusetts, a program called eBird will be used for bird ecology data in tandem with meteorological data.
+In this project we will study the following five species: Magnolia warbler (Setophaga magnolia), Cape May warbler (Setophaga tigrina), Yellow-rumped warbler (Setophaga coronata), Palm warbler (Setophaga palmarum), and Black-throated Green warbler (Setophaga virens).
+
+![A Magnolia warbler.](magnolia.jpg)
+```{r, "Magnolia Info",echo=FALSE,warning=FALSE,message=FALSE,out.width='70%',fig.align='right',fig.cap='Fig. 1.A. Records for Magnolia warbler in Massachussets, 2019.'}
+
+magnolia <- occ_data(scientificName = "Setophaga magnolia", stateProvince="Massachusetts", limit=200,year=2019)
+cape <- occ_data(scientificName = "Setophaga tigrina", stateProvince="Massachusetts", limit=200,year=2019)
+yellow <- occ_data(scientificName = "Setophaga coronata", stateProvince="Massachusetts", limit=200,year=2019)
+palm <- occ_data(scientificName = "Setophaga palmarum", stateProvince="Massachusetts", limit=200,year=2019)
+black <- occ_data(scientificName = "Setophaga virens", stateProvince="Massachusetts", limit=200,year=2019)
+
+MA<- map_data('state', 'massachusetts')
+
+magnolia.p <- ggplot(MA, aes(long,lat,group=subregion) )+
+  geom_polygon(colour = "gray",fill="gray90")+geom_point(data=magnolia[[2]],aes(x=decimalLongitude,y=decimalLatitude,size=individualCount),alpha=0.3,inherit.aes = F)+ coord_quickmap()+theme_void()
+cape.p <- ggplot(MA, aes(long,lat,group=subregion) )+
+  geom_polygon(colour = "gray",fill="gray90")+geom_point(data=cape[[2]],aes(x=decimalLongitude,y=decimalLatitude,size=individualCount),alpha=0.3,inherit.aes = F)+ coord_quickmap()+theme_void()
+yellow.p <- ggplot(MA, aes(long,lat,group=subregion) )+
+  geom_polygon(colour = "gray",fill="gray90")+geom_point(data=yellow[[2]],aes(x=decimalLongitude,y=decimalLatitude,size=individualCount),alpha=0.3,inherit.aes = F)+ coord_quickmap()+theme_void()
+palm.p <- ggplot(MA, aes(long,lat,group=subregion) )+
+  geom_polygon(colour = "gray",fill="gray90")+geom_point(data=palm[[2]],aes(x=decimalLongitude,y=decimalLatitude,size=individualCount),alpha=0.3,inherit.aes = F)+ coord_quickmap()+theme_void()
+black.p <- ggplot(MA, aes(long,lat,group=subregion) )+
+  geom_polygon(colour = "gray",fill="gray90")+geom_point(data=black[[2]],aes(x=decimalLongitude,y=decimalLatitude,size=individualCount),alpha=0.3,inherit.aes = F)+ coord_quickmap()+theme_void()
+
+magnolia.p2 <- ggdraw()+ draw_plot(magnolia.p)
+print(magnolia.p2)
+
+```
+
+![A Cape May warbler.](cape.jpg)
+```{r, "Cape May Info",echo=FALSE,warning=FALSE,message=FALSE,out.width='70%',fig.align='right',fig.cap='Fig. 1.B. Records for Cape May warbler in Massachussets, 2019.'}
+cape.p2 <- ggdraw() +draw_plot(cape.p)
+print(cape.p2)
+```
+
+![A Yellow-rumped warbler.](yellow.jpg)
+```{r, "Yellow-rumped Info",echo=FALSE,warning=FALSE,message=FALSE,out.width='70%',fig.align='right',fig.cap='Fig. 1.C. Records for Yellow-rumped warbler in Massachussets, 2019.'}
+yellow.p2 <- ggdraw() + draw_plot(yellow.p)
+print(yellow.p2)
+```
+
+![A Palm warbler.](palm.jpg)
+```{r, "Palm Info",echo=FALSE,warning=FALSE,message=FALSE,out.width='70%',fig.align='right',fig.cap='Fig. 1.D. Records for Palm warbler in Massachussets, 2019.'}
+palm.p2 <- ggdraw() +draw_plot(palm.p)
+print(palm.p2)
+```
+
+![A Black-throated Green warbler.](black.jpg)
+```{r, "Black-throated Info",echo=FALSE,warning=FALSE,message=FALSE,out.width='70%',fig.align='right',fig.cap='Fig. 1.E. Records for Black-throated Green warbler in Massachussets, 2019.'}
+black.p2 <- ggdraw() +draw_plot(black.p)
+print(black.p2)
+```
 
 ## Methods
 After choosing what species of TGMs to study, occurence data from an rgbif function will be used to grab data for each species. NOAA's NCDC API will be used to locate weather stations specific locations throughout the birds trip to Boston. Then, a function called meteo_pull_monitors() will be used to grab weather data from these stations.
@@ -65,7 +118,7 @@ dat%>%
 
 ```
 
-```{r, "Weather Set up",echo=FALSE,warning=FALSE,message=FALSE,fig.cap='Fig.1. Weather sampling locations for this project.'}
+```{r, "Weather Set up",echo=FALSE,warning=FALSE,message=FALSE,fig.cap='Fig. 2. Weather sampling locations for this project.'}
 
 options(noaakey = "MNNiOTQiqymUOFxyhavrXdSobVKuKJyr")
 
@@ -94,6 +147,8 @@ plot_usmap(
 weather.d <- meteo_pull_monitors(sta.d$id,date_min = "2000-01-01")
 head(weather.d)
 ```
+
+First, a data set was created by collecting data for each of our species between 2000 and 2020 to allow to analyze eBird data. Then, another data set was created using NOAA's NCDC API, collecting weather data in the between the years 2000 and 2020, in three different regions of the USA. The weather sampling locations are shown above, and were chosen to reflect the path of TGMs.
 
 ```{r, "EBird Data Modeling For Magnolia Warbler (sm)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sm<- dat%>%
@@ -131,6 +186,8 @@ sm.arrive.date%>%
 
 ```
 
+The plots above show that 25% of the population of Magnolia warblers arrived between the Julian days 130 and 136.
+
 ```{r, "EBird Data Modeling For Cape May Warbler (st)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 st<- dat%>%
   filter(species == "Setophaga tigrina")%>%
@@ -166,6 +223,8 @@ st.arrive.date%>%
   ggplot(aes(year,j.day))+geom_point()
 
 ```
+
+The plots above show that 25% of the population of Cape May warblers arrived between the Julian days 125 and 133.
 
 ```{r, "EBird Data Modeling For Yellow-Rumped Warbler (sc)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sc<- dat%>%
@@ -203,6 +262,8 @@ sc.arrive.date%>%
 
 ```
 
+The plots above show that 25% of the population of Yellow-rumped warblers arrived between the Julian days 114 and 121.
+
 ```{r, "EBird Data Modeling For Palm Warbler (sp)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sp<- dat%>%
   filter(species == "Setophaga palmarum")%>%
@@ -239,6 +300,8 @@ sp.arrive.date%>%
 
 ```
 
+The plots above show that 25% of the population of Palm warblers arrived between the Julian days 103 and 112.
+
 ```{r, "EBird Data Modeling For Black-Throated Green Warbler (sv)",echo=FALSE,warning=FALSE,message=FALSE,out.width = "50%",fig.show='hold'}
 sv<- dat%>%
   filter(species == "Setophaga virens")%>%
@@ -274,6 +337,8 @@ sv.arrive.date%>%
   ggplot(aes(year,j.day))+geom_point()
 
 ```
+
+The plots above show that 25% of the population of Black-throated Green warblers arrived between the Julian days 125 and 131.
 
 ```{r, "Weather Data Prep",include=FALSE,warning=FALSE,message=FALSE}
 #single day data
@@ -354,7 +419,9 @@ sv.arr.weath2 <- sv.arrive.date%>%
   left_join(weather.wk)
 head(sv.arr.weath2)
 ```
+
 After analyzing both the eBird and weather data, linear mixed-effect modelling was conducted for the five species of birds.
+
 ```{r, "Linear Mixed-Effect Modelling for Magnolia Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
 #weather at 0, 5, and 10 days away from arrival
@@ -375,6 +442,7 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sm.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+Based on the analysis shown above for the Magnolia warbler, a model including minimum and maximum temperature as well as wind vector explains the data best. The ANOVA test shows no significant predictors.
 
 ```{r, "Linear Mixed-Effect Modelling for Cape May Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
@@ -395,6 +463,7 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),st.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+Based on the analysis shown above for the Cape May warbler, a model including minimum and maximum temperature as well as wind vector explains the data best. The ANOVA test shows no significant predictors.
 
 ```{r, "Linear Mixed-Effect Modelling for Yellow-Rumped Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
@@ -416,6 +485,7 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sc.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+Based on the analysis shown above for the Yellow-rumped warbler, a model including minimum and maximum temperature as well as wind vector explains the data best. The ANOVA test shows no significant predictors.
 
 ```{r, "Linear Mixed-Effect Modelling for Palm Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
@@ -437,6 +507,7 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sp.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+Based on the analysis shown above for the Palm warbler, a model including minimum and maximum temperature as well as wind vector explains the data best. The ANOVA test shows minimum and maximum temperature as significant predictors.
 
 ```{r, "Linear Mixed-Effect Modelling for Black-Throated Green Warbler",echo=FALSE,warning=FALSE,message=FALSE}
 
@@ -458,6 +529,7 @@ best.lmer <-  lmer(j.day~wk.tmin+wk.tmax+wk.wvec+(1|name),sv.arr.weath2,na.actio
 
 Anova(best.lmer)
 ```
+Based on the analysis shown above for the Black-throated Green warbler, a model including minimum and maximum temperature as well as wind vector explains the data best. The ANOVA test shows no significant predictors.
 
 ## Discussion
   Weather can influence the arrival time for TGMs migrating to MA. In 2004, weather conditions were slightly above average for most of the year, including the Julian days between 120 and 150. That year is also said to be the fourth warmest year on record (US Department of Commerce). Our TGM data for three of our five species show a slightly different graphical display for those dates. Between the years 2000 and 2020, about 100% of our Magnolia Warblers, Cape May Warbler, and Black-Throated Green Warbler birds arrived in Massachusetts by Julian day 140. However, for all three species the 2004 data is an outlier. There appeared to be a delay for the three species in arriving in Massachusetts. There is a possibility that the 2004 higher than normal weather conditions globally confused these birds, delaying their migration patterns as weather does influence a bird’s arrival time.
@@ -471,7 +543,7 @@ Anova(best.lmer)
 
 ## Author Contribution
 * Sabrina G. wrote the introduction and method sections.
-* Clémentine P. did the R-coding for this project, and the editing of the project.
+* Clémentine P. did the R-coding, the results, and the editing of the project.
 * Stefanie F. worked on the discussion section of this project.
 
 ## References
